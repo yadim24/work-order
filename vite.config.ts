@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
         // Typechecking in development mode
         typescript: true,
         // Linting in production mode
-        ...((mode === 'production' || mode === 'staging') && {
+        ...(mode === 'production' && {
           eslint: {
             lintCommand:
               'eslint "./src/**/*.{ts,tsx}"' +
@@ -28,13 +28,13 @@ export default defineConfig(({ mode }) => {
       }),
     ],
     server: {
-      port: 3003,
-      // proxy: {
-      //   '/api': {
-      //     target: env.VITE_PROXY,
-      //     changeOrigin: true,
-      //   },
-      // },
+      port: 3000,
+      proxy: {
+        '/api': {
+          target: env.VITE_PROXY,
+          changeOrigin: true,
+        },
+      },
       watch: {
         /**
          * Для устранения бага "Uncaught SyntaxError: The requested
@@ -48,7 +48,7 @@ export default defineConfig(({ mode }) => {
          * Влияет на загрузку процессора, поэтому после обновлений VSCode или
          * vite пробовать отключать этот параметр.
          */
-        usePolling: env.XDG_SESSION_DESKTOP === 'ubuntu',
+        usePolling: true,
       },
     },
     preview: {

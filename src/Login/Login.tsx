@@ -1,9 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useLogin } from 'api/endpoints/login';
-import { Button } from 'components/Button';
-import { Input } from 'components/Input';
 import { ReactElement } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { Navigate } from 'react-router-dom';
+import { tokenStore } from 'shared/token';
+import { Button } from 'shared/ui/Button';
+import { Input } from 'shared/ui/Input';
 import { z } from 'zod';
 import styles from './Login.module.css';
 
@@ -34,7 +36,11 @@ export const Login = (): ReactElement => {
   };
 
   return (
-    <div className={styles['popup-backdrop']}>
+    <>
+      {tokenStore.getToken() && <Navigate to="/workorders" replace />}
+      <header className={styles.header}>
+        <img className={styles.logo} src="/logo.png" alt="Логотип" />
+      </header>
       <div className={styles.popup}>
         <form
           className={styles['popup-form']}
@@ -59,6 +65,6 @@ export const Login = (): ReactElement => {
           <Button type="submit">Войти</Button>
         </form>
       </div>
-    </div>
+    </>
   );
 };

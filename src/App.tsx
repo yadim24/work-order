@@ -1,4 +1,4 @@
-import { Login } from 'Login/Login';
+import { AppRoutes } from 'AppRoutes/AppRoutes';
 import { QueryProvider } from 'providers/QueryProvider';
 import { ReactElement } from 'react';
 import './App.css';
@@ -6,7 +6,7 @@ import './App.css';
 export const App = (): ReactElement => {
   return (
     <QueryProvider>
-      <Login />
+      <AppRoutes />
     </QueryProvider>
   );
 };

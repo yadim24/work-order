@@ -1,0 +1,45 @@
+.input-text {
+  background-color: #414141;
+  border-radius: 6px;
+  height: 32px;
+  transition-property: background-color, box-shadow;
+  transition-duration: 0.15s;
+  font-size: 16px;
+  color: #fff;
+}
+
+.input-text:-webkit-autofill,
+.input-text:-webkit-autofill:hover,
+.input-text:-webkit-autofill:focus,
+.input-text:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #414141 inset !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+.input-text:hover {
+  box-shadow: 0 0 0 1px rgba(146, 146, 146, 0.329);
+}
+
+.input-text:focus {
+  outline: none;
+  background-color: #4b4a4a;
+  box-shadow: 0 0 0 2px rgba(175, 175, 175, 0.1);
+}
+
+.input-text:focus:invalid {
+  outline: none;
+  border-color: #ca3e47;
+  box-shadow: none;
+}
+
+.input-checkbox {
+  margin-right: 6px;
+  width: 16px;
+  height: 16px;
+}
+
+.input-radio {
+  margin: 0 10px;
+  width: 16px;
+  height: 16px;
+}

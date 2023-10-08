@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import { IS_DEV } from 'shared/constants/misc';
+import { tokenStore } from 'shared/token';
 import { z } from 'zod';
 import { apiAxios } from './apiAxios';
 
@@ -15,6 +16,10 @@ export const createRequest = async <Data, Schema extends z.ZodTypeAny>({
 CreateRequestParams<Data, Schema>): Promise<any> => {
   const { data } = await apiAxios({
     ...options,
+    headers: {
+      ...options.headers,
+      Authorization: tokenStore.getToken(),
+    },
   });
 
   if (schema) {

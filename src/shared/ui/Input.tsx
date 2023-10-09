@@ -13,7 +13,10 @@ export const Input = forwardRef<
       className={clsx(
         {
           [styles['input-text']!]:
-            type === 'text' || type === 'date' || type === 'password',
+            type === 'text' ||
+            type === 'date' ||
+            type === 'password' ||
+            type === 'search',
           [styles['input-checkbox']!]: type === 'checkbox',
           [styles['input-radio']!]: type === 'radio',
         },

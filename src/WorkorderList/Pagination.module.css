@@ -1,0 +1,32 @@
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 16px 32px;
+}
+
+.page-back-next {
+  color: #c4c4c4;
+  font-size: 16px;
+  font-weight: 500;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.pages {
+  color: #c4c4c4;
+  font-size: 16px;
+  font-style: italic;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.active {
+  color: #ca3e47;
+}
+
+.visibility {
+  visibility: hidden;
+}

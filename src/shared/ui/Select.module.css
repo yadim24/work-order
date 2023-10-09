@@ -1,4 +1,4 @@
-.input-text {
+.select {
   background-color: #414141;
   border-radius: 6px;
   border: 1px solid #4e4e4e;
@@ -10,30 +10,12 @@
   color: #fff;
 }
 
-.input-text:hover {
+.select:hover {
   background-color: #4e4e4e;
 }
 
-.input-text:focus {
+.select:focus {
   outline: none;
   background-color: #4b4a4a;
   box-shadow: 0 0 0 1px rgba(175, 175, 175, 0.1);
-}
-
-.input-text:focus:invalid {
-  outline: none;
-  border-color: #ca3e47;
-  box-shadow: none;
-}
-
-.input-checkbox {
-  margin-right: 6px;
-  width: 16px;
-  height: 16px;
-}
-
-.input-radio {
-  margin: 0 10px;
-  width: 16px;
-  height: 16px;
 }

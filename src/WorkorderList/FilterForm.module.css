@@ -1,0 +1,33 @@
+.search-form {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+  padding: 24px 0;
+}
+
+.search-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.filter-container {
+  display: flex;
+  gap: 16px;
+}
+
+.filter-button {
+  grid-column: span 1;
+}
+
+.search {
+  grid-column: 9 / span 4;
+}
+
+.date {
+  grid-column: span 4;
+}
+
+.done {
+  grid-column: 5 / span 4;
+}

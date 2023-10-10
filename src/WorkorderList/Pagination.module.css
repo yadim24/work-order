@@ -1,0 +1,32 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 32px;
+  gap: 8px;
+}
+
+.page-back-next {
+  display: inline-flex;
+  align-items: center;
+  color: #c4c4c4;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.pages {
+  color: #a3a3a3;
+  font-size: 16px;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.active {
+  color: #ca3e47;
+}
+
+.visibility {
+  visibility: hidden;
+}

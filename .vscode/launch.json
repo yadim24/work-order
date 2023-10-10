@@ -9,14 +9,14 @@
       "type": "chrome",
       "request": "launch",
       "webRoot": "${workspaceFolder}/src",
-      "userDataDir": "/home/aleksei/Chrome_remote_debugging/",
+      "userDataDir": "/home/yadim/Chrome_remote_debugging/",
       "runtimeArgs": [
         // "--disable-web-security", // опционально, если нужно отключить cors
         "--no-first-run",
         "--no-default-browser-check",
         "--auto-open-devtools-for-tabs"
       ],
-      "url": "http://localhost:3003",
+      "url": "http://localhost:3000",
       "skipFiles": ["**/node_modules/**", "<node_internals>/**"]
     }
   ]

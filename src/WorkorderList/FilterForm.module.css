@@ -1,6 +1,7 @@
 .search-form {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: center;
   gap: 16px;
   padding: 24px 0;
 }
@@ -30,4 +31,10 @@
 
 .done {
   grid-column: 5 / span 4;
+}
+
+.filter-header {
+  display: flex;
+  flex-direction: column;
+  color: #a3a3a3;
 }

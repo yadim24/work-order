@@ -1,18 +1,31 @@
+import { workorderListSearchParamsScheme } from 'WorkorderList/workorderListSearchParamsScheme';
 import { useWorkorderList } from 'api/endpoints/workorder';
 import clsx from 'clsx';
 import { PackageCheck, PackageX } from 'lucide-react';
 import { ReactElement } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { invariant } from 'shared/invariant';
 import { useDebounce } from 'shared/useDebounce';
-import { workorderListSearchParamsScheme } from 'shared/zodScheme';
+import { invariant } from 'shared/utils/invariant';
 import { FilterForm } from './FilterForm';
 import { Pagination } from './Pagination';
+import { TableHeader } from './TableHeader';
 import styles from './WorkorderList.module.css';
 import { QUERY_PARAM } from './constants';
 
+const tableFieldNames = [
+  { title: 'Заказ-наряд', value: 'number', isSorted: true },
+  { title: 'Завершен', value: 'is_finished', isSorted: true },
+  { title: 'Дата', value: 'start_date', isSorted: true },
+  { title: 'Продукция', value: 'product_id', isSorted: false },
+];
+
 export const WorkorderList = (): ReactElement => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams({
+    page: '1',
+    page_size: '10',
+  });
+
+  workorderListSearchParamsScheme.parse(Object.fromEntries(searchParams));
 
   const validatedWorkorderListSearchParams =
     workorderListSearchParamsScheme.safeParse(Object.fromEntries(searchParams));
@@ -63,17 +76,88 @@ export const WorkorderList = (): ReactElement => {
     });
   };
 
+  const handleIsFinished = (isFinished: string): void => {
+    setFirstPage();
+    setSearchParams((prevSearchParams) => {
+      if (!isFinished) {
+        prevSearchParams.delete(QUERY_PARAM.IS_FINISHED);
+      } else {
+        prevSearchParams.set(QUERY_PARAM.IS_FINISHED, isFinished);
+      }
+
+      return prevSearchParams;
+    });
+  };
+
+  const handleProduct = (productId: string): void => {
+    setFirstPage();
+    setSearchParams((prevSearchParams) => {
+      if (!productId) {
+        prevSearchParams.delete(QUERY_PARAM.PRODUCT_ID);
+      } else {
+        prevSearchParams.set(QUERY_PARAM.PRODUCT_ID, productId);
+      }
+
+      return prevSearchParams;
+    });
+  };
+
+  const resetFilter = (): void => {
+    setFirstPage();
+    setSearchParams((prevSeachParams) => {
+      prevSeachParams.delete(QUERY_PARAM.START_DATE);
+      prevSeachParams.delete(QUERY_PARAM.IS_FINISHED);
+      prevSeachParams.delete(QUERY_PARAM.PRODUCT_ID);
+
+      return prevSeachParams;
+    });
+  };
+
+  const handleSort = (value: string): void => {
+    setFirstPage();
+
+    if (value === validatedSearchParams.ordering) {
+      setSearchParams((prevSearchParams) => {
+        prevSearchParams.set(
+          QUERY_PARAM.ORDERING,
+          value.startsWith('-') ? value.slice(1) : `-${value}`,
+        );
+
+        return prevSearchParams;
+      });
+    } else {
+      setSearchParams((prevSearchParams) => {
+        prevSearchParams.set(QUERY_PARAM.ORDERING, value);
+
+        return prevSearchParams;
+      });
+    }
+  };
+
   return (
     <main className={styles.main}>
       <h1 className={styles.header}>Заказы-наряды</h1>
-      <FilterForm onChangeSearch={handleSearch} onChangeDate={handleDate} />
+      <FilterForm
+        onChangeSearch={handleSearch}
+        onChangeDate={handleDate}
+        onChangeIsFinished={handleIsFinished}
+        onChangeProduct={handleProduct}
+        onClose={resetFilter}
+      />
       <table className={styles.table}>
         <thead className={styles.thead}>
           <tr className={styles.tr}>
-            <th className={styles.th}>Заказ-наряд</th>
-            <th className={styles.th}>Завершен</th>
-            <th className={styles.th}>Дата</th>
-            <th className={styles.th}>Продукция</th>
+            {tableFieldNames.map((name) => (
+              <TableHeader
+                key={name.value}
+                isSorted={name.isSorted}
+                sortedField={validatedSearchParams.ordering}
+                value={name.value}
+                onSortClick={() => handleSort(name.value)}
+              >
+                {name.title}
+              </TableHeader>
+            ))}
           </tr>
         </thead>
         <tbody className={styles.tbody}>
@@ -98,6 +182,7 @@ export const WorkorderList = (): ReactElement => {
       <Pagination
         count={getWorkorderList.data?.count ? getWorkorderList.data?.count : 1}
         activePage={validatedSearchParams.page}
+        pageSize={validatedSearchParams.page_size}
         onChangePage={(number) =>
           setSearchParams((prevSearchParams) => {
             prevSearchParams.set(QUERY_PARAM.PAGE, number.toString());

@@ -1,15 +1,22 @@
 import clsx from 'clsx';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { FC } from 'react';
 import styles from './Pagination.module.css';
 
 type Props = {
   count: number;
   activePage: number;
+  pageSize: number;
   onChangePage: (page: number) => void;
 };
 
-export const Pagination: FC<Props> = ({ count, activePage, onChangePage }) => {
-  const pagesQty = Math.ceil(count / 10);
+export const Pagination: FC<Props> = ({
+  count,
+  activePage,
+  pageSize,
+  onChangePage,
+}) => {
+  const pagesQty = Math.ceil(count / pageSize);
   const pagesBtn = Array.from({ length: pagesQty }).map(
     (_item, index) => index + 1,
   );
@@ -22,8 +29,9 @@ export const Pagination: FC<Props> = ({ count, activePage, onChangePage }) => {
           [styles.visibility!]: activePage === 1,
         })}
         onClick={() => onChangePage(activePage - 1)}
+        title="Предыдущая страница"
       >
-        Назад
+        <ChevronLeft size={28} />
       </button>
       <div>
         {pagesBtn.map((page) => (
@@ -46,8 +54,9 @@ export const Pagination: FC<Props> = ({ count, activePage, onChangePage }) => {
           [styles.visibility!]: activePage === pagesQty,
         })}
         onClick={() => onChangePage(activePage + 1)}
+        title="Следующая страница"
       >
-        Вперёд
+        <ChevronRight size={28} />
       </button>
     </div>
   );

@@ -30,8 +30,10 @@ export type WorkorderListDto = z.infer<typeof workorderListDto>;
 
 export type WorkorderListQuery = {
   page: number;
+  page_size: number;
   start_date?: string;
   is_finished?: boolean;
-  product_id?: number;
+  product__id?: number;
   search?: string;
+  ordering?: string;
 };

@@ -3,19 +3,26 @@ import { WorkorderList } from 'WorkorderList/WorkorderList';
 import { ReactNode } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { AppLayout } from './AppLayout';
+import { ConfiguredErrorBoundary } from './ConfiguredErrorBoundary';
 import { PrivateRoute } from './PrivateRoute';
 
 const router = createBrowserRouter([
   {
     path: '/login',
-    element: <Login />,
+    element: (
+      <ConfiguredErrorBoundary>
+        <Login />
+      </ConfiguredErrorBoundary>
+    ),
   },
   {
     path: '/',
     element: (
-      <PrivateRoute>
-        <AppLayout />
-      </PrivateRoute>
+      <ConfiguredErrorBoundary>
+        <PrivateRoute>
+          <AppLayout />
+        </PrivateRoute>
+      </ConfiguredErrorBoundary>
     ),
     children: [
       {

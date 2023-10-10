@@ -7,12 +7,14 @@ import { createRequest } from 'api/createRequest';
 import { LoginDto, TokenDto, tokenDto } from 'api/types/login';
 import { tokenStore } from 'shared/token';
 
-type UseLoginOptions = UseMutationOptions<TokenDto, unknown, LoginDto>;
+type ErrorDto = { response?: { data?: { non_field_errors?: string[] } } };
+
+type UseLoginOptions = UseMutationOptions<TokenDto, ErrorDto, LoginDto>;
 
 export const useLogin = (
   options?: UseLoginOptions,
-): UseMutationResult<TokenDto, unknown, LoginDto, unknown> =>
-  useMutation<TokenDto, unknown, LoginDto>({
+): UseMutationResult<TokenDto, ErrorDto, LoginDto, unknown> =>
+  useMutation<TokenDto, ErrorDto, LoginDto>({
     mutationFn: (data) =>
       createRequest({
         options: {

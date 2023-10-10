@@ -30,6 +30,8 @@ export const Login = (): ReactElement => {
   });
 
   const loginMutation = useLogin();
+  const errorMessages =
+    loginMutation.error?.response?.data?.non_field_errors ?? [];
 
   const onSubmit: SubmitHandler<LoginFormValues> = (formValues) => {
     loginMutation.mutate(formValues);
@@ -63,6 +65,11 @@ export const Login = (): ReactElement => {
             </span>
           </div>
           <Button type="submit">Войти</Button>
+          {errorMessages.map((errorMsg) => (
+            <p className={styles['error-message']} key={errorMsg}>
+              {errorMsg}
+            </p>
+          ))}
         </form>
       </div>
     </>

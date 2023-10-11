@@ -1,11 +1,13 @@
-import { workorderListSearchParamsScheme } from 'WorkorderList/workorderListSearchParamsScheme';
 import { useWorkorderList } from 'api/endpoints/workorder';
 import clsx from 'clsx';
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 import { PackageCheck, PackageX } from 'lucide-react';
 import { ReactElement } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useDebounce } from 'shared/useDebounce';
 import { invariant } from 'shared/utils/invariant';
+import { workorderListSearchParamsScheme } from 'workorders/WorkorderList/workorderListSearchParamsScheme';
 import { FilterForm } from './FilterForm';
 import { Pagination } from './Pagination';
 import { TableHeader } from './TableHeader';
@@ -13,7 +15,7 @@ import styles from './WorkorderList.module.css';
 import { QUERY_PARAM } from './constants';
 
 const tableFieldNames = [
-  { title: 'Заказ-наряд', value: 'number', isSorted: true },
+  { title: '№', value: 'number', isSorted: true },
   { title: 'Завершен', value: 'is_finished', isSorted: true },
   { title: 'Дата', value: 'start_date', isSorted: true },
   { title: 'Продукция', value: 'product_id', isSorted: false },
@@ -163,7 +165,9 @@ export const WorkorderList = (): ReactElement => {
         <tbody className={styles.tbody}>
           {getWorkorderList.data?.results.map((order) => (
             <tr key={order.id} className={styles.tr}>
-              <td className={styles.td}>{order.number}</td>
+              <td className={styles.td}>
+                <Link to={order.id.toString()}>{order.number}</Link>
+              </td>
               <td className={clsx(styles.td, styles['td-center'])}>
                 {order.is_finished ? (
                   <PackageCheck size={24} color="#00850f" />
@@ -172,7 +176,9 @@ export const WorkorderList = (): ReactElement => {
                 )}
               </td>
               <td className={clsx(styles.td, styles['td-center'])}>
-                {order.start_date ? order.start_date : '-'}
+                {order.start_date
+                  ? format(new Date(order.start_date), 'P', { locale: ru })
+                  : '-'}
               </td>
               <td className={styles.td}>{order.product.name}</td>
             </tr>

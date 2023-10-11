@@ -1,7 +1,9 @@
 import { Login } from 'Login/Login';
-import { WorkorderList } from 'WorkorderList/WorkorderList';
 import { ReactNode } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { ROUTE_PARAM } from 'shared/constants/misc';
+import { WorkorderItem } from 'workorders/WorkorderItem/WorkorderItem';
+import { WorkorderList } from 'workorders/WorkorderList/WorkorderList';
 import { AppLayout } from './AppLayout';
 import { ConfiguredErrorBoundary } from './ConfiguredErrorBoundary';
 import { PrivateRoute } from './PrivateRoute';
@@ -27,12 +29,25 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'workorders',
-        element: <WorkorderList />,
+        children: [
+          {
+            element: <WorkorderList />,
+            index: true,
+          },
+          {
+            path: `:${ROUTE_PARAM.WORKORDER_ID}`,
+            element: <WorkorderItem />,
+          },
+          // {
+          //   path: ':id/edit',
+          //   element: <EditWorkorderItem />,
+          // },
+          // {
+          //   path: 'add',
+          //   element: <EditWorkorderItem />,
+          // },
+        ],
       },
-      //   {
-      //     path: 'workorders/:id',
-      //     element: <WorkorderItem />,
-      //   },
     ],
   },
 ]);

@@ -37,3 +37,20 @@ export type WorkorderListQuery = {
   search?: string;
   ordering?: string;
 };
+
+export const productItemDto = z.object({
+  id: z.number(),
+  serial: z.string(),
+  weight: z.string(),
+  date: z.string(),
+});
+
+export type ProductItemDto = z.infer<typeof productItemDto>;
+
+export const productListDto = z.array(productItemDto);
+
+export type ProductListDto = z.infer<typeof productListDto>;
+
+export type ProductDto = {
+  weight: string;
+};

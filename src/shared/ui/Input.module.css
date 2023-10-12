@@ -4,6 +4,7 @@
   border: 1px solid #4e4e4e;
   border-style: inset;
   height: 32px;
+  width: 100%;
   transition-property: background-color;
   transition-duration: 0.15s;
   font-size: 16px;

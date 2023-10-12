@@ -1,7 +1,7 @@
 import { useDeleteProduct, useProductList } from 'api/endpoints/workorder';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { Trash2 } from 'lucide-react';
+import { Printer, Trash2 } from 'lucide-react';
 import { FC } from 'react';
 import { useTypedRouteParams } from 'shared/reactRouter/useTypedParams';
 import { Button } from 'shared/ui/Button';
@@ -25,15 +25,28 @@ export const ProductList: FC = () => {
           <td className={styles.td}>{product.serial}</td>
           <td className={styles.td}>{product.weight}</td>
           <td className={styles.td}>
-            {' '}
-            <Button
-              type="button"
-              onClick={() =>
-                deleteProductQuery.mutate({ productId: product.id.toString() })
-              }
-            >
-              <Trash2 size={20} />
-            </Button>
+            <div className={styles['button-wrapper']}>
+              <Button
+                type="button"
+                onClick={() =>
+                  deleteProductQuery.mutate({
+                    productId: product.id.toString(),
+                  })
+                }
+              >
+                <Printer size={20} />
+              </Button>
+              <Button
+                type="button"
+                onClick={() =>
+                  deleteProductQuery.mutate({
+                    productId: product.id.toString(),
+                  })
+                }
+              >
+                <Trash2 size={20} />
+              </Button>
+            </div>
           </td>
         </tr>
       ))}

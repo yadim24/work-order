@@ -9,6 +9,7 @@ import {
 } from '@tanstack/react-query';
 import { createRequest } from 'api/createRequest';
 import {
+  CreateUpdateWorkorderDto,
   ProductDto,
   ProductItemDto,
   ProductListDto,
@@ -20,6 +21,7 @@ import {
   workorderItemDto,
   workorderListDto,
 } from 'api/types/workorder';
+import { toast } from 'react-toastify';
 import { OmitTyped } from 'shared/types';
 
 export const workorderListQueryKey = {
@@ -173,6 +175,8 @@ export const useCreateProduct = (
       queryClient.invalidateQueries(
         productListQueryKey.params(params.workorderId),
       );
+      toast.success('Продукция создана успешно');
+
       options?.onSuccess?.(...restParams);
     },
   });
@@ -202,6 +206,99 @@ export const useDeleteProduct = (
       queryClient.invalidateQueries(
         productListQueryKey.params(params.workorderId),
       );
+      toast.success('Продукция удалена успешно');
+
+      options?.onSuccess?.(...restParams);
+    },
+  });
+};
+
+type UseCreateWorkorderOptions = OmitTyped<
+  UseMutationOptions<unknown, unknown, CreateUpdateWorkorderDto>,
+  'mutationFn'
+>;
+
+export const useCreateWorkorder = (
+  options?: UseCreateWorkorderOptions,
+): UseMutationResult<unknown, unknown, CreateUpdateWorkorderDto> => {
+  const queryClient = useQueryClient();
+
+  return useMutation<unknown, unknown, CreateUpdateWorkorderDto>({
+    mutationFn: (data) =>
+      createRequest({
+        options: {
+          url: `/workorders/`,
+          method: 'POST',
+          data,
+        },
+      }),
+    ...options,
+    onSuccess: (...restParams) => {
+      queryClient.invalidateQueries(workorderListQueryKey.root);
+      toast.success('Заказ-наряд создан успешно');
+
+      options?.onSuccess?.(...restParams);
+    },
+  });
+};
+
+type UseUpdateWorkorderOptions = OmitTyped<
+  UseMutationOptions<unknown, unknown, CreateUpdateWorkorderDto>,
+  'mutationFn'
+>;
+
+export const useUpdateWorkorder = (
+  params: { workorderId: string },
+  options?: UseUpdateWorkorderOptions,
+): UseMutationResult<unknown, unknown, CreateUpdateWorkorderDto> => {
+  const queryClient = useQueryClient();
+
+  return useMutation<unknown, unknown, CreateUpdateWorkorderDto>({
+    mutationFn: (data) =>
+      createRequest({
+        options: {
+          url: `/workorders/${params.workorderId}/`,
+          method: 'PUT',
+          data,
+        },
+      }),
+    ...options,
+    onSuccess: (...restParams) => {
+      queryClient.invalidateQueries(workorderListQueryKey.root);
+      queryClient.invalidateQueries(
+        workorderItemQueryKey.params(params.workorderId),
+      );
+      toast.success('Заказ-наряд отредактирован успешно');
+
+      options?.onSuccess?.(...restParams);
+    },
+  });
+};
+
+type UseDeleteWorkorderOptions = OmitTyped<
+  UseMutationOptions<unknown, unknown, void>,
+  'mutationFn'
+>;
+
+export const useDeleteWorkorder = (
+  params: { workorderId: string },
+  options?: UseDeleteWorkorderOptions,
+): UseMutationResult<unknown, unknown, void> => {
+  const queryClient = useQueryClient();
+
+  return useMutation<unknown, unknown, void>({
+    mutationFn: () =>
+      createRequest({
+        options: {
+          url: `/workorders/${params.workorderId}/`,
+          method: 'DELETE',
+        },
+      }),
+    ...options,
+    onSuccess: (...restParams) => {
+      queryClient.invalidateQueries(workorderListQueryKey.root);
+      toast.success('Заказ-наряд удален успешно');
+
       options?.onSuccess?.(...restParams);
     },
   });

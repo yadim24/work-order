@@ -1,11 +1,14 @@
-import { useWorkorderItem } from 'api/endpoints/workorder';
+import { useDeleteWorkorder, useWorkorderItem } from 'api/endpoints/workorder';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { FileEdit, PackagePlus, Trash2 } from 'lucide-react';
 import { FC, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTypedRouteParams } from 'shared/reactRouter/useTypedParams';
 import { Button } from 'shared/ui/Button';
 import { invariant } from 'shared/utils/invariant';
+import { CreateWorkorder } from 'workorders/shared/CreateWorkorder';
 import { CreateProduct } from './CreateProduct';
 import { ProductList } from './ProductList';
 import styles from './WorkorderItem.module.css';
@@ -13,14 +16,26 @@ import styles from './WorkorderItem.module.css';
 export const WorkorderItem: FC = () => {
   const { workorderId } = useTypedRouteParams();
   const [isActive, setIsActive] = useState(false);
+  const [updateWorkorderIsActive, setUpdateWorkorderIsActive] = useState(false);
+  const navigate = useNavigate();
 
   invariant(!!workorderId, 'workorderId должен иметь тип string');
   const workorderItemQuery = useWorkorderItem({ workorderId });
 
+  const deleteWorkorderMutation = useDeleteWorkorder(
+    { workorderId },
+    {
+      onSuccess: () => {
+        navigate('..');
+      },
+    },
+  );
+
   return (
     <main className={styles.main}>
       <h1 className={styles.header}>
-        Заказ-наряд {workorderItemQuery.data?.number}
+        <span className={styles['header-name']}>Заказ-наряд: </span>
+        {workorderItemQuery.data?.number}
       </h1>
       <div className={styles['order-container']}>
         <div className={styles['order-detail-container']}>
@@ -55,17 +70,28 @@ export const WorkorderItem: FC = () => {
             </p>
           </div>
           <div className={styles['order-detail-button']}>
-            <Button type="button">
+            <Button
+              type="button"
+              onClick={() =>
+                setUpdateWorkorderIsActive((prevState) => !prevState)
+              }
+            >
               <FileEdit size={20} />
             </Button>
-            <Button type="button">
+            <Button
+              type="button"
+              onClick={() => deleteWorkorderMutation.mutate()}
+            >
               <Trash2 size={20} />
             </Button>
           </div>
         </div>
         <div className={styles['product-container']}>
           <div className={styles['header-wrapper']}>
-            <Button type="button" onClick={() => setIsActive(!isActive)}>
+            <Button
+              type="button"
+              onClick={() => setIsActive((prevState) => !prevState)}
+            >
               <PackagePlus size={20} />
             </Button>
             <h2 className={styles['product-header']}>
@@ -85,9 +111,22 @@ export const WorkorderItem: FC = () => {
           </table>
         </div>
       </div>
-      {isActive && (
-        <CreateProduct onCloseModal={() => setIsActive(!isActive)} />
-      )}
+      {isActive &&
+        createPortal(
+          <CreateProduct
+            onCloseModal={() => setIsActive((prevState) => !prevState)}
+          />,
+          document.body,
+        )}
+      {updateWorkorderIsActive &&
+        createPortal(
+          <CreateWorkorder
+            onCloseModal={() =>
+              setUpdateWorkorderIsActive((prevState) => !prevState)
+            }
+          />,
+          document.body,
+        )}
     </main>
   );
 };

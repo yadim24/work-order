@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Printer, Trash2 } from 'lucide-react';
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 import { useTypedRouteParams } from 'shared/reactRouter/useTypedParams';
 import { Button } from 'shared/ui/Button';
 import { invariant } from 'shared/utils/invariant';
@@ -26,16 +27,14 @@ export const ProductList: FC = () => {
           <td className={styles.td}>{product.weight}</td>
           <td className={styles.td}>
             <div className={styles['button-wrapper']}>
-              <Button
-                type="button"
-                onClick={() =>
-                  deleteProductQuery.mutate({
-                    productId: product.id.toString(),
-                  })
-                }
-              >
-                <Printer size={20} />
-              </Button>
+              <div className={styles.print}>
+                <Link
+                  className={styles.link}
+                  to={`products_print/${product.id.toString()}`}
+                >
+                  <Printer size={20} />
+                </Link>
+              </div>
               <Button
                 type="button"
                 onClick={() =>

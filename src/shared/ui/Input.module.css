@@ -28,13 +28,8 @@
 }
 
 .input-checkbox {
+  accent-color: #ca3e47;
   margin-right: 6px;
-  width: 16px;
-  height: 16px;
-}
-
-.input-radio {
-  margin: 0 10px;
   width: 16px;
   height: 16px;
 }

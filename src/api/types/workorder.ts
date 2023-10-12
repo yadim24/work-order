@@ -60,4 +60,5 @@ export type CreateUpdateWorkorderDto = {
   start_date: string | null;
   material: string;
   product: string;
+  is_finished: boolean;
 };

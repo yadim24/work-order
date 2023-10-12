@@ -147,7 +147,7 @@ export const WorkorderList = (): ReactElement => {
         onClose={resetFilter}
       />
       <table className={styles.table}>
-        <thead className={styles.thead}>
+        <thead>
           <tr className={styles.tr}>
             {tableFieldNames.map((name) => (
               <TableHeader
@@ -162,7 +162,7 @@ export const WorkorderList = (): ReactElement => {
             ))}
           </tr>
         </thead>
-        <tbody className={styles.tbody}>
+        <tbody>
           {getWorkorderList.data?.results.map((order) => (
             <tr key={order.id} className={styles.tr}>
               <td className={styles.td}>

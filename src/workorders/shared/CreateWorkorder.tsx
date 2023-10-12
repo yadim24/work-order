@@ -19,6 +19,7 @@ const validateWorkorder = z.object({
   start_date: z.string().transform((value) => value || null),
   material: z.string(),
   product: z.string(),
+  is_finished: z.boolean(),
 });
 
 type WorkorderFormValues = z.infer<typeof validateWorkorder>;
@@ -47,6 +48,7 @@ export const CreateWorkorder: FC<Props> = ({ onCloseModal }) => {
       start_date: '',
       material: '',
       product: '',
+      is_finished: false,
     },
   });
 
@@ -57,6 +59,7 @@ export const CreateWorkorder: FC<Props> = ({ onCloseModal }) => {
         start_date: workorderQuery.data.start_date,
         material: workorderQuery.data.material.id.toString(),
         product: workorderQuery.data.product.id.toString(),
+        is_finished: workorderQuery.data.is_finished,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -140,7 +143,19 @@ export const CreateWorkorder: FC<Props> = ({ onCloseModal }) => {
               {errors.product ? errors.product.message : <>&nbsp;</>}
             </span>
           </div>
-          <Button type="submit">Добавить</Button>
+          <div className={styles['popup-input']}>
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+            <label htmlFor="is_finished">Заказ завершен: </label>
+            <Input
+              id="is_finished"
+              type="checkbox"
+              {...register('is_finished')}
+            />
+            <span className={styles['error-message']}>
+              {errors.is_finished ? errors.is_finished.message : <>&nbsp;</>}
+            </span>
+          </div>
+          <Button type="submit">{workorderId ? 'Изменить' : 'Добавить'}</Button>
         </form>
       </div>
     </div>

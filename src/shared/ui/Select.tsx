@@ -1,19 +1,21 @@
 import clsx from 'clsx';
-import { FC, ReactNode, SelectHTMLAttributes } from 'react';
+import { ReactNode, SelectHTMLAttributes, forwardRef } from 'react';
 import styles from './Select.module.css';
 
-type InputSelect = SelectHTMLAttributes<HTMLSelectElement> & {
-  children: ReactNode;
+type Props = SelectHTMLAttributes<HTMLSelectElement> & {
+  children?: ReactNode;
 };
 
-export const Select: FC<InputSelect> = ({
-  children,
-  className,
-  ...restProps
-}) => {
-  return (
-    <select {...restProps} className={clsx(styles.select, className)}>
-      {children}
-    </select>
-  );
-};
+export const Select = forwardRef<HTMLSelectElement, Props>(
+  ({ children, className, ...restProps }, ref) => {
+    return (
+      <select
+        {...restProps}
+        className={clsx(styles.select, className)}
+        ref={ref}
+      >
+        {children}
+      </select>
+    );
+  },
+);

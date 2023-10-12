@@ -8,6 +8,10 @@
   font-size: 24px;
 }
 
+.header-name {
+  color: #a3a3a3;
+}
+
 .order-container {
   display: flex;
   justify-content: center;

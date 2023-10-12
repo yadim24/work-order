@@ -2,11 +2,13 @@
 import { useNomenclature } from 'api/endpoints/nomenclature';
 import { NomenclatureItemDto } from 'api/types/nomenclature';
 import clsx from 'clsx';
-import { Filter, FilterX, PackagePlus } from 'lucide-react';
+import { CopyPlus, Filter, FilterX } from 'lucide-react';
 import { ChangeEventHandler, FC, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from 'shared/ui/Button';
 import { Input } from 'shared/ui/Input';
 import { Select } from 'shared/ui/Select';
+import { CreateWorkorder } from 'workorders/shared/CreateWorkorder';
 import styles from './FilterForm.module.css';
 
 type FilterParams = {
@@ -24,7 +26,8 @@ export const FilterForm: FC<FilterParams> = ({
   onChangeProduct,
   onClose,
 }) => {
-  const [isActive, setIsActive] = useState(false);
+  const [filterIsActive, setFilterIsActive] = useState(false);
+  const [createWorkorderIsActive, setCreateWorkorderIsActive] = useState(false);
   const [filterDate, setFilterDate] = useState('');
 
   const handleSearch: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -49,7 +52,7 @@ export const FilterForm: FC<FilterParams> = ({
     onChangeIsFinished(e.target.value);
   };
 
-  const products = useNomenclature();
+  const productsQuery = useNomenclature();
 
   const handleProduct: ChangeEventHandler<HTMLSelectElement> = (e) => {
     onChangeProduct(e.target.value);
@@ -57,33 +60,33 @@ export const FilterForm: FC<FilterParams> = ({
 
   return (
     <div className={styles['search-form']}>
-      <Button
-        className={styles['filter-button']}
-        type="button"
-        onClick={() => setIsActive((prevState) => !prevState)}
-        title="Добавить заказ-наряд"
-      >
-        <PackagePlus size={18} />
-      </Button>
+      <div className={styles['buttons-wrapper']}>
+        <Button
+          type="button"
+          onClick={() => setCreateWorkorderIsActive((prevState) => !prevState)}
+          title="Добавить заказ-наряд"
+        >
+          <CopyPlus size={18} />
+        </Button>
 
-      <Button
-        className={styles['filter-button']}
-        type="button"
-        onClick={() => {
-          setIsActive((prevState) => !prevState);
-          if (isActive) onClose();
-        }}
-        title={isActive ? 'Сбросить фильтр' : 'Добавить фильтр'}
-      >
-        {isActive ? <FilterX size={18} /> : <Filter size={18} />}
-      </Button>
+        <Button
+          type="button"
+          onClick={() => {
+            setFilterIsActive((prevState) => !prevState);
+            if (filterIsActive) onClose();
+          }}
+          title={filterIsActive ? 'Сбросить фильтр' : 'Добавить фильтр'}
+        >
+          {filterIsActive ? <FilterX size={18} /> : <Filter size={18} />}
+        </Button>
+      </div>
       <Input
         type="search"
         className={styles.search}
         onChange={handleSearch}
         placeholder="Поиск"
       />
-      {isActive && (
+      {filterIsActive && (
         <>
           <label className={clsx(styles.date, styles['filter-header'])}>
             <span>По дате</span>
@@ -101,7 +104,7 @@ export const FilterForm: FC<FilterParams> = ({
             <span>По продукции</span>
             <Select onChange={handleProduct}>
               <option value="">Не выбрано</option>
-              {products.data?.map((product: NomenclatureItemDto) => (
+              {productsQuery.data?.map((product: NomenclatureItemDto) => (
                 <option key={product.id} value={product.id}>
                   {product.name}
                 </option>
@@ -110,6 +113,15 @@ export const FilterForm: FC<FilterParams> = ({
           </label>
         </>
       )}
+      {createWorkorderIsActive &&
+        createPortal(
+          <CreateWorkorder
+            onCloseModal={() =>
+              setCreateWorkorderIsActive((prevState) => !prevState)
+            }
+          />,
+          document.body,
+        )}
     </div>
   );
 };

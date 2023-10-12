@@ -38,14 +38,6 @@ const router = createBrowserRouter([
             path: `:${ROUTE_PARAM.WORKORDER_ID}`,
             element: <WorkorderItem />,
           },
-          // {
-          //   path: ':id/edit',
-          //   element: <EditWorkorderItem />,
-          // },
-          // {
-          //   path: 'add',
-          //   element: <EditWorkorderItem />,
-          // },
         ],
       },
     ],

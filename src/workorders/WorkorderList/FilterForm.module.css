@@ -17,8 +17,10 @@
   gap: 16px;
 }
 
-.filter-button {
-  grid-column: span 1;
+.buttons-wrapper {
+  display: flex;
+  gap: 8px;
+  grid-column: span 2;
 }
 
 .search {

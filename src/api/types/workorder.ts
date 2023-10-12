@@ -54,3 +54,10 @@ export type ProductListDto = z.infer<typeof productListDto>;
 export type ProductDto = {
   weight: string;
 };
+
+export type CreateUpdateWorkorderDto = {
+  number: string;
+  start_date: string | null;
+  material: string;
+  product: string;
+};

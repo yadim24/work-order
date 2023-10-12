@@ -18,7 +18,6 @@ export const Input = forwardRef<
             type === 'password' ||
             type === 'search',
           [styles['input-checkbox']!]: type === 'checkbox',
-          [styles['input-radio']!]: type === 'radio',
         },
         className,
       )}

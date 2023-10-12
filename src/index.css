@@ -16,3 +16,11 @@ body {
   background-color: #313131;
   color: #fff;
 }
+
+@media print {
+  body {
+    margin: 0;
+    background-color: #fff;
+    color: #000;
+  }
+}

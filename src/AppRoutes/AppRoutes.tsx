@@ -2,6 +2,7 @@ import { Login } from 'Login/Login';
 import { ReactNode } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ROUTE_PARAM } from 'shared/constants/misc';
+import { ProductPrint } from 'workorders/WorkorderItem/ProductPrint';
 import { WorkorderItem } from 'workorders/WorkorderItem/WorkorderItem';
 import { WorkorderList } from 'workorders/WorkorderList/WorkorderList';
 import { AppLayout } from './AppLayout';
@@ -36,7 +37,16 @@ const router = createBrowserRouter([
           },
           {
             path: `:${ROUTE_PARAM.WORKORDER_ID}`,
-            element: <WorkorderItem />,
+            children: [
+              {
+                element: <WorkorderItem />,
+                index: true,
+              },
+              {
+                path: `products_print/:${ROUTE_PARAM.PRODUCT_ID}`,
+                element: <ProductPrint />,
+              },
+            ],
           },
         ],
       },

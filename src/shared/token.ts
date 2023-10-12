@@ -8,6 +8,10 @@ class TokenStore {
   getToken(): string | null {
     return this.token;
   }
+
+  deleteToken(): void {
+    this.token = null;
+  }
 }
 
 export const tokenStore = new TokenStore();

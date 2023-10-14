@@ -51,7 +51,7 @@ export const productListDto = z.array(productItemDto);
 
 export type ProductListDto = z.infer<typeof productListDto>;
 
-export type ProductDto = {
+export type CreateProductDto = {
   weight: string;
 };
 

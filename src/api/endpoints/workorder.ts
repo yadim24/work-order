@@ -9,8 +9,8 @@ import {
 } from '@tanstack/react-query';
 import { createRequest } from 'api/createRequest';
 import {
+  CreateProductDto,
   CreateUpdateWorkorderDto,
-  ProductDto,
   ProductItemDto,
   ProductListDto,
   WorkorderItemDto,
@@ -22,7 +22,7 @@ import {
   workorderListDto,
 } from 'api/types/workorder';
 import { toast } from 'react-toastify';
-import { OmitTyped } from 'shared/types';
+import { ErrorDto, OmitTyped } from 'shared/types';
 
 export const workorderListQueryKey = {
   root: ['workorderList'],
@@ -150,18 +150,20 @@ export const useProductItem = (
   });
 };
 
+export type ErrorProductDto = ErrorDto<CreateProductDto>;
+
 type UseCreateProductOptions = OmitTyped<
-  UseMutationOptions<unknown, unknown, ProductDto>,
+  UseMutationOptions<unknown, ErrorProductDto, CreateProductDto>,
   'mutationFn'
 >;
 
 export const useCreateProduct = (
   params: { workorderId: string },
   options?: UseCreateProductOptions,
-): UseMutationResult<unknown, unknown, ProductDto> => {
+): UseMutationResult<unknown, ErrorProductDto, CreateProductDto> => {
   const queryClient = useQueryClient();
 
-  return useMutation<unknown, unknown, ProductDto>({
+  return useMutation<unknown, ErrorProductDto, CreateProductDto>({
     mutationFn: (data) =>
       createRequest({
         options: {
@@ -213,17 +215,19 @@ export const useDeleteProduct = (
   });
 };
 
+export type ErrorWorkorderDto = ErrorDto<CreateUpdateWorkorderDto>;
+
 type UseCreateWorkorderOptions = OmitTyped<
-  UseMutationOptions<unknown, unknown, CreateUpdateWorkorderDto>,
+  UseMutationOptions<unknown, ErrorWorkorderDto, CreateUpdateWorkorderDto>,
   'mutationFn'
 >;
 
 export const useCreateWorkorder = (
   options?: UseCreateWorkorderOptions,
-): UseMutationResult<unknown, unknown, CreateUpdateWorkorderDto> => {
+): UseMutationResult<unknown, ErrorWorkorderDto, CreateUpdateWorkorderDto> => {
   const queryClient = useQueryClient();
 
-  return useMutation<unknown, unknown, CreateUpdateWorkorderDto>({
+  return useMutation<unknown, ErrorWorkorderDto, CreateUpdateWorkorderDto>({
     mutationFn: (data) =>
       createRequest({
         options: {
@@ -243,17 +247,17 @@ export const useCreateWorkorder = (
 };
 
 type UseUpdateWorkorderOptions = OmitTyped<
-  UseMutationOptions<unknown, unknown, CreateUpdateWorkorderDto>,
+  UseMutationOptions<unknown, ErrorWorkorderDto, CreateUpdateWorkorderDto>,
   'mutationFn'
 >;
 
 export const useUpdateWorkorder = (
   params: { workorderId: string },
   options?: UseUpdateWorkorderOptions,
-): UseMutationResult<unknown, unknown, CreateUpdateWorkorderDto> => {
+): UseMutationResult<unknown, ErrorWorkorderDto, CreateUpdateWorkorderDto> => {
   const queryClient = useQueryClient();
 
-  return useMutation<unknown, unknown, CreateUpdateWorkorderDto>({
+  return useMutation<unknown, ErrorWorkorderDto, CreateUpdateWorkorderDto>({
     mutationFn: (data) =>
       createRequest({
         options: {

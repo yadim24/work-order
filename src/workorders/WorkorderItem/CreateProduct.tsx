@@ -1,5 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCreateProduct } from 'api/endpoints/workorder';
+import { ErrorProductDto, useCreateProduct } from 'api/endpoints/workorder';
+import { CreateProductDto } from 'api/types/workorder';
+import { isAxiosError } from 'axios';
 import { FC } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useTypedRouteParams } from 'shared/reactRouter/useTypedParams';
@@ -26,6 +28,7 @@ export const CreateProduct: FC<Props> = ({ onCloseModal }) => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<WeightFormValue>({
     resolver: zodResolver(validateWeight),
@@ -35,11 +38,30 @@ export const CreateProduct: FC<Props> = ({ onCloseModal }) => {
   });
 
   invariant(!!workorderId, 'workorderId должен иметь тип string');
-  const createProductMutation = useCreateProduct({ workorderId });
+
+  const handleError = (error: ErrorProductDto): void => {
+    if (
+      isAxiosError(error) &&
+      error.response?.data &&
+      error.response?.status === 400
+    ) {
+      (
+        Object.entries(error.response?.data) as Array<
+          [keyof CreateProductDto, string[]]
+        >
+      ).forEach(([fieldName, messages]) => {
+        setError(fieldName, { type: 'server', message: messages.join(' ') });
+      });
+    }
+  };
+
+  const createProductMutation = useCreateProduct(
+    { workorderId },
+    { onSuccess: onCloseModal, onError: handleError },
+  );
 
   const onSubmit: SubmitHandler<WeightFormValue> = (formValue) => {
     createProductMutation.mutate(formValue);
-    onCloseModal();
   };
 
   return (

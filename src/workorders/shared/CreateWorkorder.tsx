@@ -1,10 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNomenclature } from 'api/endpoints/nomenclature';
 import {
+  ErrorWorkorderDto,
   useCreateWorkorder,
   useUpdateWorkorder,
   useWorkorderItem,
 } from 'api/endpoints/workorder';
+import { CreateUpdateWorkorderDto } from 'api/types/workorder';
+import { isAxiosError } from 'axios';
 import { FC, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useTypedRouteParams } from 'shared/reactRouter/useTypedParams';
@@ -40,9 +43,11 @@ export const CreateWorkorder: FC<Props> = ({ onCloseModal }) => {
     handleSubmit,
     reset,
     resetField,
+    setError,
     formState: { errors },
   } = useForm<WorkorderFormValues>({
     resolver: zodResolver(validateWorkorder),
+    criteriaMode: 'all',
     defaultValues: {
       number: '',
       start_date: '',
@@ -74,10 +79,36 @@ export const CreateWorkorder: FC<Props> = ({ onCloseModal }) => {
       },
     },
   );
-  const createWorkorderMutation = useCreateWorkorder();
-  const updateWorkorderMutation = useUpdateWorkorder({
-    workorderId: workorderId as string,
+
+  const handleError = (error: ErrorWorkorderDto): void => {
+    if (
+      isAxiosError(error) &&
+      error.response?.data &&
+      error.response?.status === 400
+    ) {
+      (
+        Object.entries(error.response?.data) as Array<
+          [keyof CreateUpdateWorkorderDto, string[]]
+        >
+      ).forEach(([fieldName, messages]) => {
+        setError(fieldName, { type: 'server', message: messages.join(' ') });
+      });
+    }
+  };
+
+  const createWorkorderMutation = useCreateWorkorder({
+    onSuccess: onCloseModal,
+    onError: handleError,
   });
+  const updateWorkorderMutation = useUpdateWorkorder(
+    {
+      workorderId: workorderId as string,
+    },
+    {
+      onSuccess: onCloseModal,
+      onError: handleError,
+    },
+  );
 
   const onSubmit: SubmitHandler<WorkorderFormValues> = (formValues) => {
     if (workorderId) {
@@ -85,8 +116,6 @@ export const CreateWorkorder: FC<Props> = ({ onCloseModal }) => {
     } else {
       createWorkorderMutation.mutate(formValues);
     }
-
-    onCloseModal();
   };
 
   return (
